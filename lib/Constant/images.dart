@@ -21,4 +21,6 @@ class Appimages {
   static const pending = 'asset/images/Pending.png';
   static const worker = 'asset/images/worker.jpg';
   static const picturepicker = 'asset/images/photo.png';
+  static const loadingindicator = 'asset/images/loadingindicator.gif';
+  static const loadingindicator2 = 'asset/images/loadingindicator2.gif';
 }

@@ -113,40 +113,6 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
                 SizedBox(
                   height: 0.03.sh,
                 ),
-                Text('Password'),
-                TextFeildWithIcon(
-                  validator: (pvalue) {
-                    if (pvalue!.isEmpty) {
-                      return 'field is required';
-                    } else {
-                      return null;
-                    }
-                  },
-                  focusnode: _focusNode,
-                  textEditingController: _passwordController,
-                  tittle: 'Password',
-                ),
-                SizedBox(
-                  height: 0.03.sh,
-                ),
-                Text('Confirm Password'),
-                TextFeildWithIcon(
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'field is required';
-                    } else if (value != _passwordController.text) {
-                      return "Password don't match";
-                    } else {
-                      return null;
-                    }
-                  },
-                  focusnode: _cpfocusNode,
-                  textEditingController: _confirmpasswordController,
-                  tittle: 'Password',
-                ),
-                SizedBox(
-                  height: 0.03.sh,
-                ),
                 Text('Organisation/company'),
                 FormField<String>(validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -251,6 +217,40 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
                     ),
                   );
                 }),
+                SizedBox(
+                  height: 0.03.sh,
+                ),
+                Text('Password'),
+                TextFeildWithIcon(
+                  validator: (pvalue) {
+                    if (pvalue!.isEmpty) {
+                      return 'field is required';
+                    } else {
+                      return null;
+                    }
+                  },
+                  focusnode: _focusNode,
+                  textEditingController: _passwordController,
+                  tittle: 'Password',
+                ),
+                SizedBox(
+                  height: 0.03.sh,
+                ),
+                Text('Confirm Password'),
+                TextFeildWithIcon(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'field is required';
+                    } else if (value != _passwordController.text) {
+                      return "Password don't match";
+                    } else {
+                      return null;
+                    }
+                  },
+                  focusnode: _cpfocusNode,
+                  textEditingController: _confirmpasswordController,
+                  tittle: 'Password',
+                ),
                 SizedBox(
                   height: 0.03.sh,
                 ),

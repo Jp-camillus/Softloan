@@ -6,6 +6,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:softloanapp/Constant/colors.dart';
 import 'package:softloanapp/Constant/images.dart';
+import 'package:softloanapp/Loadingindicator/loading.dart';
 import 'package:softloanapp/Requestloan/reasonforloan.dart';
 import 'package:softloanapp/Screen/Mainscreens/Aboutusscreen.dart';
 import 'package:softloanapp/Screen/Mainscreens/Accountverification.dart';
@@ -405,7 +406,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                 ],
               ),
               color: Colors.white,
-            )
+            ),
+            Container(height: 0.3.sh, child: Loadingindicator())
           ]),
         ),
       ),

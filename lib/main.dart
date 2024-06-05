@@ -8,6 +8,7 @@ import 'package:softloanapp/Organisation/Ogdashboard.dart';
 import 'package:softloanapp/Screen/Mainscreens/Accountverification.dart';
 import 'package:softloanapp/Screen/Mainscreens/Accountverification2.dart';
 import 'package:softloanapp/Screen/Mainscreens/Accountverification3.dart';
+import 'package:softloanapp/Screen/Mainscreens/Profile.dart';
 
 import 'package:softloanapp/Screen/Mainscreens/navdashboardscreen.dart';
 import 'package:softloanapp/Widget/bottomnavbar.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
                 useMaterial3: true,
               ),
-              home: Introscreen(),
+              home: BottomNav(),
             );
           }),
     );
