@@ -23,4 +23,5 @@ class Appimages {
   static const picturepicker = 'asset/images/photo.png';
   static const loadingindicator = 'asset/images/loadingindicator.gif';
   static const loadingindicator2 = 'asset/images/loadingindicator2.gif';
+  static const loadingindicator3 = 'asset/images/loadingindicator (2).gif';
 }

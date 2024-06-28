@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:softloanapp/Constant/colors.dart';
+import 'package:softloanapp/Providers/Authproviders/Authprovider.dart';
 import 'package:softloanapp/Screen/Auth/signupscreen.dart';
 
 import 'package:softloanapp/Screen/Resetpassword/resetpasswordscreen.dart';
@@ -24,6 +26,7 @@ class _SigninscreenscreenState extends State<Signinscreenscreen> {
 
   bool _isButtonEnabled = false;
   FocusNode _focusNode = FocusNode();
+  Softloanauth signInUser = Get.put(Softloanauth());
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +90,7 @@ class _SigninscreenscreenState extends State<Signinscreenscreen> {
                   tittle: 'Password',
                 ),
                 SizedBox(
-                  height: 0.03.sh,
+                  height: 0.05.sh,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -139,6 +142,8 @@ class _SigninscreenscreenState extends State<Signinscreenscreen> {
   }
 
   void _login() {
-    Get.offAll(BottomNav());
+    signInUser.SignInUser(
+        phoneNumber: phonenumbercontroller.text.trim(),
+        password: _passwordController.text.trim());
   }
 }

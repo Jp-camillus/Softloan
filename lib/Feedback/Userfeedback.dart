@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:softloanapp/Constant/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
-class Userfeedback {
-  Showpositivesnakebar(String message) {
-    ScaffoldFeatureController<SnackBar, SnackBarClosedReason> build(
-        BuildContext context) {
-      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('$message'),
-        backgroundColor: colors.Appcolors,
-      ));
-    }
-  }
-
-  Shownegetivesnackbar(String message) {
-    ScaffoldFeatureController<SnackBar, SnackBarClosedReason> build(
-        BuildContext context) {
-      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('$message'),
-        backgroundColor: Colors.red,
-      ));
-    }
+class UserfeedBack {
+  showfeedback(Color color, String message) async {
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+      ),
+    );
   }
 }

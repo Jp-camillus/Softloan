@@ -200,7 +200,5 @@ class _ReasonforlaonState extends State<Reasonforlaon> {
     });
   }
 
-  void _next() {
-    Get.to(transition: Transition.leftToRight, Loansuccessscreen());
-  }
+  void _next() {}
 }

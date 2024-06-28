@@ -137,7 +137,5 @@ class _Accountverification2State extends State<Accountverification2> {
     });
   }
 
-  void _login() {
-    Get.offAll(Successcreen());
-  }
+  void _login() {}
 }

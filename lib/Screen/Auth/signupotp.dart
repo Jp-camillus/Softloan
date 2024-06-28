@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:softloanapp/Constant/colors.dart';
+import 'package:softloanapp/Constant_API_data/datakeys.dart';
+import 'package:softloanapp/Providers/Authproviders/Authprovider.dart';
 import 'package:softloanapp/Screen/Auth/signinscreen.dart';
 import 'package:softloanapp/Screen/Resetpassword/changepasswordscreen.dart';
 import 'package:softloanapp/Screen/Resetpassword/resetpasswordscreen.dart';
@@ -18,6 +20,8 @@ class Signupotpscreen extends StatefulWidget {
 }
 
 class _SignupotpscreenState extends State<Signupotpscreen> {
+  Softloanauth auth = Get.put(Softloanauth());
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController phonenumbercontroller = TextEditingController();
 
@@ -89,7 +93,7 @@ class _SignupotpscreenState extends State<Signupotpscreen> {
                   height: 0.05,
                 ),
                 Text(
-                  'please enter the code that was sent to 09122328691',
+                  'please enter the code that was sent to ${SoftlaonDataKeys.PHONE}',
                 ),
                 SizedBox(
                   height: 0.1.sh,
@@ -100,7 +104,7 @@ class _SignupotpscreenState extends State<Signupotpscreen> {
                   textvalidator: (value) {
                     if (value!.isEmpty) {
                       return 'field is required';
-                    } else if (value.length != 6) {
+                    } else if (value.length != 5) {
                       return 'Invalid OTP';
                     } else {
                       return null;
@@ -133,7 +137,7 @@ class _SignupotpscreenState extends State<Signupotpscreen> {
                   height: 0.03.sh,
                 ),
                 CustomButtonWisget(
-                  ontap: _isButtonEnabled ? _login : null,
+                  ontap: _isButtonEnabled ? _verifyphone : null,
                   tittle: 'Verify',
                   isActive: _isButtonEnabled,
                 ),
@@ -151,7 +155,7 @@ class _SignupotpscreenState extends State<Signupotpscreen> {
     });
   }
 
-  void _login() {
-    Get.to(Signinscreenscreen());
+  void _verifyphone() {
+    auth.VerifyOTP(code: phonenumbercontroller.text.trim());
   }
 }

@@ -1,9 +1,11 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:softloanapp/Constant/colors.dart';
+import 'package:softloanapp/Providers/Authproviders/Authprovider.dart';
 import 'package:softloanapp/Screen/Auth/signinscreen.dart';
 import 'package:softloanapp/Screen/Auth/signupotp.dart';
 import 'package:softloanapp/Screen/Resetpassword/otpscreen.dart';
@@ -20,8 +22,10 @@ class Signupscreenscreen extends StatefulWidget {
 }
 
 class _SignupscreenscreenState extends State<Signupscreenscreen> {
+  Softloanauth auth = Get.put(Softloanauth());
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _organisationcontroller = TextEditingController();
   final TextEditingController phonenumbercontroller = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -80,7 +84,6 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
                 SizedBox(
                   height: 0.035.sh,
                 ),
-                Text('First Name'),
                 TextFeildWithNoIcon(
                   textvalidator: (firstname) {
                     if (firstname!.isEmpty) {
@@ -93,7 +96,7 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
                   Tittle: 'First Name',
                 ),
                 SizedBox(
-                  height: 0.03.sh,
+                  height: 0.035.sh,
                 ),
                 Text('Phone number'),
                 TextFeildWithNoIcon(
@@ -170,7 +173,7 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
                         height: 40,
                       ),
                       dropdownSearchData: DropdownSearchData(
-                        searchController: textEditingController,
+                        searchController: _organisationcontroller,
                         searchInnerWidgetHeight: 50,
                         searchInnerWidget: Container(
                           height: 60,
@@ -181,7 +184,7 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
                             left: 8,
                           ),
                           child: TextFormField(
-                            controller: textEditingController,
+                            controller: _organisationcontroller,
                             decoration: InputDecoration(
                               fillColor: Colors.white,
                               filled: true,
@@ -211,7 +214,7 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
                       //This to clear the search value when you close the menu
                       onMenuStateChange: (isOpen) {
                         if (!isOpen) {
-                          textEditingController.clear();
+                          _organisationcontroller.clear();
                         }
                       },
                     ),
@@ -292,7 +295,7 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
                   ],
                 ),
                 CustomButtonWisget(
-                  ontap: _isButtonEnabled ? _login : null,
+                  ontap: _isButtonEnabled ? _gotosignupotpscreen : null,
                   tittle: 'Register',
                   isActive: _isButtonEnabled,
                 ),
@@ -311,7 +314,13 @@ class _SignupscreenscreenState extends State<Signupscreenscreen> {
     });
   }
 
-  void _login() {
-    Get.to(Signupotpscreen());
+  void _gotosignupotpscreen() async {
+    await auth.RegisterNewUser(
+        name: _usernameController.text.trim(),
+        phone: phonenumbercontroller.text.trim(),
+        passwordconfirm: _confirmpasswordController.text.trim(),
+        organisation: selectedValue as String,
+        password: _passwordController.text.trim());
   }
 }
+ 
