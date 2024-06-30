@@ -10,13 +10,13 @@ import 'package:softloanapp/Feedback/Userfeedback.dart';
 import 'package:softloanapp/Loadingindicator/loading.dart';
 import 'package:softloanapp/Models/softloanmodel.dart';
 
-class GetSoftloanData {
-  Organisation? _organisationgotten;
+class GetSoftloanData extends GetxController {
   bool _isloading = false;
   Softloanauth() {
     print('Authentication Initiated');
   }
 
+  UserData? userDataa;
   void progresiveindicator() {
     showDialog(
       barrierColor: Colors.transparent,
@@ -27,7 +27,7 @@ class GetSoftloanData {
     );
   }
 
-  // isLogin change
+  final userdatarefresh = UserData().obs;
 
   void isLoadingToggler(bool value) {
     _isloading = value;
@@ -52,7 +52,7 @@ class GetSoftloanData {
   }
 
   Future<void> getorganisation() async {
-    isLoadingToggler(true);
+    // isLoadingToggler(true);
     try {
       final response = await SoftloanHelperAPIMethods.getData(
           uri: SoftloanendPoints.ORGANISATIONDATA);
@@ -60,18 +60,39 @@ class GetSoftloanData {
       if (response.statusCode == 200) {
         print('DATA FETCHING SUCCESSFULL');
         final Map<String, dynamic> json = jsonDecode(response.body);
-        final returneddata = Organisation.fromJson(json);
+        final returneddata = UserData.fromJson(json);
         print('DATA RESULTS==$returneddata');
       } else {
         print('FAIL TO FETCH ORGANISATION DATA');
         final Map<String, dynamic> json = jsonDecode(response.body);
-        final returneddata = Organisation.fromJson(json);
+        final returneddata = UserData.fromJson(json);
         print(returneddata);
       }
     } catch (e) {
       throw (e);
     } finally {
-      isLoadingToggler(false);
+      // isLoadingToggler(false);
     }
+  }
+
+  Future<void> getUserData() async {
+    print('GETTING USER DATA');
+    try {
+      final myresponse =
+          await SoftloanHelperAPIMethods.GetDataWithAuthorization(
+              uri: SoftloanendPoints.USERDATA);
+      print(myresponse.statusCode);
+      print('USER DATA:::${myresponse.body}');
+      if (myresponse.statusCode == 200) {
+        print("USER DATA FETCHING SUCCESSFULLY");
+        Map<String, dynamic> json = jsonDecode(myresponse.body);
+        UserData userData = UserData.fromJson(json['user']);
+        userdatarefresh.refresh();
+        print('DATA RESULTS==${userData.name}');
+        userDataa = userData;
+        print(userDataa!.name);
+      }
+    } catch (e) {
+    } finally {}
   }
 }

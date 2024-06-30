@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:softloanapp/Constant/colors.dart';
 import 'package:softloanapp/Constant_API_data/datakeys.dart';
 import 'package:softloanapp/Providers/Authproviders/Authprovider.dart';
@@ -13,7 +14,8 @@ import 'package:softloanapp/Widget/custombutton.dart';
 import 'package:softloanapp/Widget/textfield.dart';
 
 class Signupotpscreen extends StatefulWidget {
-  const Signupotpscreen({super.key});
+  final String Phonenumber;
+  const Signupotpscreen({super.key, required this.Phonenumber});
 
   @override
   State<Signupotpscreen> createState() => _SignupotpscreenState();
@@ -21,6 +23,7 @@ class Signupotpscreen extends StatefulWidget {
 
 class _SignupotpscreenState extends State<Signupotpscreen> {
   Softloanauth auth = Get.put(Softloanauth());
+  SoftlaonDataKeys softlaonDataKeys = SoftlaonDataKeys();
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController phonenumbercontroller = TextEditingController();
@@ -59,9 +62,13 @@ class _SignupotpscreenState extends State<Signupotpscreen> {
     );
   }
 
-  void resendOTP() {
+  void resendOTP() async {
     // Add your logic here for resending OTP
     // For demo purpose, resetting counter to 30 seconds
+    final sharedPref = await SharedPreferences.getInstance();
+    String? phoneNumber = await sharedPref.getString(SoftlaonDataKeys.PHONE);
+
+    auth.ResendOTP(phoneNumber: phoneNumber);
     setState(() {
       _counter = 30;
     });
@@ -93,7 +100,7 @@ class _SignupotpscreenState extends State<Signupotpscreen> {
                   height: 0.05,
                 ),
                 Text(
-                  'please enter the code that was sent to ${SoftlaonDataKeys.PHONE}',
+                  'please enter the code that was sent to ${widget.Phonenumber} ',
                 ),
                 SizedBox(
                   height: 0.1.sh,

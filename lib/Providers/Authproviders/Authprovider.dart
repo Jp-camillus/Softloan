@@ -8,60 +8,25 @@ import 'package:softloanapp/Constant_API_data/apihelper.dart';
 import 'package:softloanapp/Constant_API_data/datakeys.dart';
 import 'package:softloanapp/Feedback/Userfeedback.dart';
 import 'package:http/http.dart' as http;
+import 'package:softloanapp/Intro/authintroscreen.dart';
 import 'package:softloanapp/Loadingindicator/loading.dart';
+import 'package:softloanapp/Providers/Softloanproviders/Getdataprovider.dart';
 import 'package:softloanapp/Route/approute.dart';
 import 'package:softloanapp/Screen/Auth/signupotp.dart';
+import 'package:softloanapp/Screen/Mainscreens/dashboard.dart';
+import 'package:softloanapp/Screen/Mainscreens/navdashboardscreen.dart';
 import 'package:softloanapp/Screen/Mainscreens/successcreen.dart';
 import 'package:softloanapp/Succes&faliurescreen/loanapplysuccess.dart';
 
 import '../../Widget/bottomnavbar.dart';
 
 class Softloanauth extends GetxController {
+  final GetSoftloanData getSoftloanData = Get.put(GetSoftloanData());
+
   bool _isloading = false;
   Softloanauth() {
     print('Authentication Initiated');
   }
-  void progresiveindicator() {
-    showDialog(
-      barrierColor: Colors.transparent,
-      context: Get.context!,
-      builder: (buider) {
-        return Loadingindicator();
-      },
-    );
-  }
-
-  // isLogin change
-
-  void isLoadingToggler(bool value) {
-    _isloading = value;
-    if (value) {
-      progresiveindicator();
-    } else {
-      Get.back(); // Close the loading indicator dialog
-    }
-  }
-
-  UserfeedBack _userfeedBack = UserfeedBack();
-  // is user loggedIn
-  Future<bool> isUserLoggedIn() async {
-    final sharedPref = await SharedPreferences.getInstance();
-    String? token = await sharedPref.getString(SoftlaonDataKeys.TOKEN);
-
-    if (token != null && token.isNotEmpty) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // go home
-  void goToHome() {}
-
-  void goToPhoneverify() {
-    Get.off(Signupotpscreen());
-  }
-
   void goTodashboard() {
     Get.offAll(BottomNav());
   }
@@ -72,6 +37,62 @@ class Softloanauth extends GetxController {
 
   void goToLoansuccessfull() {
     Get.offAll(Loansuccessscreen());
+  }
+
+  void goTointroscreeb() {
+    Get.offAll(Introscreen());
+  }
+
+  void progresiveindicator() {
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: Get.context!,
+      builder: (buider) {
+        return Loadingindicator();
+      },
+    );
+  }
+
+  void onReady() {
+    isUserLoggedIn();
+    super.onReady();
+  }
+  // isLogin change
+
+  UserfeedBack _userfeedBack = UserfeedBack();
+  // is user loggedIn
+  Future<void> isUserLoggedIn() async {
+    final sharedPref = await SharedPreferences.getInstance();
+    String? token = await sharedPref.getString(SoftlaonDataKeys.TOKEN);
+
+    if (token != null && token.isNotEmpty) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        getSoftloanData.getUserData();
+      });
+      Future.delayed(Duration(seconds: 3), () {
+        goTodashboard();
+      });
+    } else {
+      goTointroscreeb();
+    }
+  }
+
+  void isLoadingToggler(bool value) {
+    _isloading = value;
+    if (value) {
+      progresiveindicator();
+    } else {
+      Get.back(); // Close the loading indicator dialog
+    }
+  }
+
+  // go home
+  void goToHome() {}
+
+  void goToPhoneverify(String phone) {
+    Get.offAll(Signupotpscreen(
+      Phonenumber: phone,
+    ));
   }
 
   Future<void> RegisterNewUser(
@@ -103,12 +124,13 @@ class Softloanauth extends GetxController {
 
       print("REGISTERERED-CLIENT: $decodeddata");
       if (myresponse.statusCode == 201) {
+        goToPhoneverify(decodeddata['user']['phone']);
         print('Registration succesful');
         _userfeedBack.showfeedback(Colors.green, 'Registration Successfull');
-        goToPhoneverify();
-        await sp.setString(SoftlaonDataKeys.TOKEN, decodeddata['token']);
+        await sp.setString(SoftlaonDataKeys.TOKEN, decodeddata['access_token']);
         await sp.setString(SoftlaonDataKeys.ORGANISATION, organisation);
-        await sp.setString(SoftlaonDataKeys.PHONE, phone);
+        await sp.setString(
+            SoftlaonDataKeys.PHONE, decodeddata['user']['phone']);
         await sp.setString(SoftlaonDataKeys.PASSWORD, password);
         print(' registered phone number${SoftlaonDataKeys.PHONE}');
       } else if (myresponse.statusCode == 422) {
@@ -123,7 +145,6 @@ class Softloanauth extends GetxController {
         _userfeedBack.showfeedback(Colors.red, 'Registration Failed');
       }
     } catch (e) {
-      _userfeedBack.showfeedback(Colors.red, 'Network error');
       throw (e);
     } finally {
       isLoadingToggler(false);
@@ -146,16 +167,28 @@ class Softloanauth extends GetxController {
   }
 
   Future<void> VerifyOTP({required String code}) async {
+    final sp = await SharedPreferences.getInstance();
+
     isLoadingToggler(true);
     try {
-      final myresponse = await SoftloanHelperAPIMethods.postData(
-          uri: SoftloanendPoints.VERIFYPHONE,
-          body: jsonEncode({'_code': code}));
+      final myresponse =
+          await SoftloanHelperAPIMethods.PostDataWithAuthorization(
+              uri: SoftloanendPoints.VERIFYPHONE,
+              body: jsonEncode({'_code': code}));
+      var decodeddata = jsonDecode(myresponse.body);
       print(myresponse.statusCode);
-      if (myresponse.statusCode == 201) {
+      if (myresponse.statusCode == 200) {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          getSoftloanData.getUserData();
+        });
+        Future.delayed(Duration(seconds: 2), () {
+          goTodashboard();
+        });
         print('Phone verification successful');
         _userfeedBack.showfeedback(Colors.green, 'Verification succesful');
-        goTodashboard();
+        await sp.setString(SoftlaonDataKeys.TOKEN, decodeddata['access_token']);
+      } else if (myresponse.statusCode == 401) {
+        _userfeedBack.showfeedback(Colors.red, 'code is incorrect');
       }
     } catch (e) {
       _userfeedBack.showfeedback(Colors.red, '$e');
@@ -163,7 +196,21 @@ class Softloanauth extends GetxController {
       isLoadingToggler(false);
     }
   }
+//for resending otp
 
+  Future<void> ResendOTP({
+    required String? phoneNumber,
+  }) async {
+    isLoadingToggler(true);
+    final sp = await SharedPreferences.getInstance();
+    try {
+      final myresponse = await SoftloanHelperAPIMethods.postData(
+        uri: SoftloanendPoints.RESENDOTP,
+        body: jsonEncode({'_code': phoneNumber}),
+      );
+      print(myresponse.statusCode);
+    } catch (e) {}
+  }
   //for signing up user
 
   Future<void> SignInUser(
@@ -181,12 +228,22 @@ class Softloanauth extends GetxController {
       final decoderesponse = jsonDecode(myresponse.body);
       print(decoderesponse);
       if (myresponse.statusCode == 201) {
-        await sp.setString(SoftlaonDataKeys.TOKEN, decoderesponse['token']);
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          getSoftloanData.getUserData();
+        });
+        Future.delayed(Duration(seconds: 2), () {
+          goTodashboard();
+        });
+        await sp.setString(
+            SoftlaonDataKeys.TOKEN, decoderesponse['access_token']);
         _userfeedBack.showfeedback(Colors.green, 'Login successfull');
-        goTodashboard();
+      } else if (myresponse.statusCode == 422) {
+        _userfeedBack.showfeedback(Colors.red, '${decoderesponse['message']}');
+      } else {
+        _userfeedBack.showfeedback(
+            Colors.red, 'check your internet connection');
       }
     } catch (e) {
-      _userfeedBack.showfeedback(Colors.red, 'check your internet connection');
       throw (e);
     } finally {
       isLoadingToggler(false);

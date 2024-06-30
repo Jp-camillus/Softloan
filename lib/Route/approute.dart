@@ -8,6 +8,5 @@ class AppRoute {
 
   static Map<String, WidgetBuilder> routes = {
     loginroute: (context) => Signinscreenscreen(),
-    Verifyphone: (context) => Signupotpscreen()
   };
 }
