@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,7 @@ import 'package:softloanapp/Constant_API_data/datakeys.dart';
 import 'package:softloanapp/Feedback/Userfeedback.dart';
 import 'package:softloanapp/Loadingindicator/loading.dart';
 import 'package:softloanapp/Models/softloanmodel.dart';
+import 'package:softloanapp/Screen/Auth/signinscreen.dart';
 
 class GetSoftloanData extends GetxController {
   bool _isloading = false;
@@ -16,7 +18,15 @@ class GetSoftloanData extends GetxController {
     print('Authentication Initiated');
   }
 
+  void onReady() {
+    super.onReady();
+    getorganisation();
+    getfaq();
+  }
+
   UserData? userDataa;
+  Datafaq? faqddata;
+
   void progresiveindicator() {
     showDialog(
       barrierColor: Colors.transparent,
@@ -27,6 +37,9 @@ class GetSoftloanData extends GetxController {
     );
   }
 
+  List? allorganization;
+  List? question;
+
   final userdatarefresh = UserData().obs;
 
   void isLoadingToggler(bool value) {
@@ -36,6 +49,10 @@ class GetSoftloanData extends GetxController {
     } else {
       Get.back(); // Close the loading indicator dialog
     }
+  }
+
+  void gotologin() {
+    Get.offAll(Signinscreenscreen());
   }
 
   UserfeedBack _userfeedBack = UserfeedBack();
@@ -54,19 +71,15 @@ class GetSoftloanData extends GetxController {
   Future<void> getorganisation() async {
     // isLoadingToggler(true);
     try {
-      final response = await SoftloanHelperAPIMethods.getData(
-          uri: SoftloanendPoints.ORGANISATIONDATA);
+      final response =
+          await SoftloanHelperAPIMethods.GetDataWithOutAuthorization(
+              uri: SoftloanendPoints.ORGANISATIONDATA);
       print(response.body);
+      var body = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print('DATA FETCHING SUCCESSFULL');
-        final Map<String, dynamic> json = jsonDecode(response.body);
-        final returneddata = UserData.fromJson(json);
-        print('DATA RESULTS==$returneddata');
+        allorganization = body['data'];
       } else {
         print('FAIL TO FETCH ORGANISATION DATA');
-        final Map<String, dynamic> json = jsonDecode(response.body);
-        final returneddata = UserData.fromJson(json);
-        print(returneddata);
       }
     } catch (e) {
       throw (e);
@@ -91,8 +104,33 @@ class GetSoftloanData extends GetxController {
         print('DATA RESULTS==${userData.name}');
         userDataa = userData;
         print(userDataa!.name);
+      } else if (myresponse.body.contains('Unauthenticated')) {
+        Future.delayed(Duration(seconds: 3), () {
+          gotologin();
+        });
       }
     } catch (e) {
     } finally {}
+  }
+
+  Future<List<Datafaq>> getfaq() async {
+    final response = await SoftloanHelperAPIMethods.GetDataWithOutAuthorization(
+        uri: SoftloanendPoints.FAQ);
+    print(response.body);
+    final json = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+    } else {
+      print('FAIL TO FETCH ORGANISATION DATA');
+    }
+    final data = json['data'] as List<dynamic>;
+    print('this is my data $data');
+    final faqdata = data.map((element) {
+      return Datafaq(
+          id: element['id'],
+          question: element['question'],
+          answer: element['answer']);
+    }).toList();
+    print('this is my faq dataaaaa$faqdata');
+    return faqdata;
   }
 }

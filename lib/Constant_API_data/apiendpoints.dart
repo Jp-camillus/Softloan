@@ -22,7 +22,7 @@ class SoftloanendPoints {
   //FAQ
   static const String FAQ = BASEURL + "api/v1/faq";
   //VERIFICATION
-  static const String VERIFICAITON = BASEURL + "api/v1/verifications";
+  static const String VERIFICAITON = BASEURL + "api/v1/submit-verification";
   //VERIFICATION ID
   static String VERIFICATIONID(String id) =>
       BASEURL + "api/v1/verifications/$id";

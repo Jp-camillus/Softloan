@@ -17,7 +17,24 @@ import 'package:softloanapp/Widget/custombutton.dart';
 import 'package:softloanapp/Widget/textfield.dart';
 
 class Accountverificationimagepicker extends StatefulWidget {
-  const Accountverificationimagepicker({super.key});
+  final String surnamecontroller;
+  final String lastnamecontroller;
+  final String workrolecontroller;
+  final String salary;
+  final String gender;
+  final String email;
+
+  final String worktype;
+
+  const Accountverificationimagepicker(
+      {super.key,
+      required this.surnamecontroller,
+      required this.lastnamecontroller,
+      required this.workrolecontroller,
+      required this.salary,
+      required this.gender,
+      required this.email,
+      required this.worktype});
 
   @override
   State<Accountverificationimagepicker> createState() =>
@@ -41,8 +58,11 @@ class _AccountverificationimagepickerState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading:
-            IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back_ios_new)),
+        leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(Icons.arrow_back_ios_new)),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -141,7 +161,17 @@ class _AccountverificationimagepickerState
   }
 
   void _login() {
-    Get.to(Accountverification2());
+    print(widget.gender);
+    Get.to(Accountverification3(
+      gender: widget.gender,
+      email: widget.email,
+      image: _selectedimage as File,
+      lastnamecontroller: widget.lastnamecontroller,
+      salary: widget.salary,
+      surnamecontroller: widget.surnamecontroller,
+      workrolecontroller: widget.workrolecontroller,
+      worktype: widget.worktype,
+    ));
   }
 
   Future _pickImageFromGalary() async {

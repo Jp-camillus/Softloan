@@ -85,57 +85,99 @@ class UserData {
   }
 }
 
-class Organisatio {
-  final String id;
-  final String name;
-  final String type;
-  final String registrationnumber;
-  final String address;
-  final String phonenumber;
-  final String email;
-  final String website;
-  final String contactperson;
-  final String contactpersontittle;
-  final String contactpersonphonenumber;
-  final String contactpersonwhatsappnumber;
-  final String contactpersonemail;
-  final String createdat;
-  final String updatedat;
-  Organisatio({
-    required this.id,
-    required this.name,
-    required this.type,
-    required this.registrationnumber,
-    required this.address,
-    required this.phonenumber,
-    required this.email,
-    required this.website,
-    required this.contactperson,
-    required this.contactpersontittle,
-    required this.contactpersonphonenumber,
-    required this.contactpersonwhatsappnumber,
-    required this.contactpersonemail,
-    required this.createdat,
-    required this.updatedat,
-  });
-  factory Organisatio.fromJson(Map<String, dynamic> json) {
-    return Organisatio(
-        id: json['data']['id'],
-        name: json['data']['name'],
-        type: json['data']['type'],
-        registrationnumber: json['data']['registration_number'],
-        address: json['data']['address'],
-        phonenumber: json['data']['phone_number'],
-        email: json['data']['email'],
-        website: json['data']['website'],
-        contactperson: json['data']['contact_person'],
-        contactpersontittle: json['data']['contact_person_title'],
-        contactpersonphonenumber: json['data']['contact_person_phone_number'],
-        contactpersonwhatsappnumber: json['data']
-            ['contact_person_whatsapp_number'],
-        contactpersonemail: json['data']['contact_person_email'],
-        createdat: json['data']['created_at'],
-        updatedat: json['data']['updated_at']);
+class Organisation {
+  List<Data>? orga;
+
+  Organisation({this.orga});
+
+  Organisation.fromJson(Map<String, dynamic> json) {
+    if (json['data'] != null) {
+      orga = <Data>[];
+      json['data'].forEach((v) {
+        orga!.add(new Data.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.orga != null) {
+      data['data'] = this.orga!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Data {
+  String? id;
+  String? name;
+  String? type;
+  String? registrationNumber;
+  String? address;
+  String? phoneNumber;
+  String? email;
+  String? website;
+  String? contactPerson;
+  String? contactPersonTitle;
+  String? contactPersonPhoneNumber;
+  String? contactPersonWhatsappNumber;
+  String? contactPersonEmail;
+  String? createdAt;
+  String? updatedAt;
+
+  Data(
+      {this.id,
+      this.name,
+      this.type,
+      this.registrationNumber,
+      this.address,
+      this.phoneNumber,
+      this.email,
+      this.website,
+      this.contactPerson,
+      this.contactPersonTitle,
+      this.contactPersonPhoneNumber,
+      this.contactPersonWhatsappNumber,
+      this.contactPersonEmail,
+      this.createdAt,
+      this.updatedAt});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    type = json['type'];
+    registrationNumber = json['registration_number'];
+    address = json['address'];
+    phoneNumber = json['phone_number'];
+    email = json['email'];
+    website = json['website'];
+    contactPerson = json['contact_person'];
+    contactPersonTitle = json['contact_person_title'];
+    contactPersonPhoneNumber = json['contact_person_phone_number'];
+    contactPersonWhatsappNumber = json['contact_person_whatsapp_number'];
+    contactPersonEmail = json['contact_person_email'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['type'] = this.type;
+    data['registration_number'] = this.registrationNumber;
+    data['address'] = this.address;
+    data['phone_number'] = this.phoneNumber;
+    data['email'] = this.email;
+    data['website'] = this.website;
+    data['contact_person'] = this.contactPerson;
+    data['contact_person_title'] = this.contactPersonTitle;
+    data['contact_person_phone_number'] = this.contactPersonPhoneNumber;
+    data['contact_person_whatsapp_number'] = this.contactPersonWhatsappNumber;
+    data['contact_person_email'] = this.contactPersonEmail;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
   }
 }
 
@@ -147,23 +189,32 @@ class Banks {
     required this.name,
   });
   factory Banks.fromJson(Map<String, dynamic> json) {
-    return Banks(id: json['data']['id'], name: json['data']['name']);
+    return Banks(id: json['id'], name: json['name']);
   }
 }
 
 class Faq {
-  final String id;
-  final String qustion;
-  final String answer;
-  Faq({
-    required this.id,
-    required this.qustion,
-    required this.answer,
-  });
-  factory Faq.fromJson(Map<String, dynamic> json) {
-    return Faq(
-        id: json['data']['id'],
-        qustion: json['data']['question'],
-        answer: json['data']['answer']);
+  String status;
+  String message;
+  Datafaq data;
+
+  Faq({required this.status, required this.message, required this.data});
+  String get fullName {
+    return '${data.answer} ${data.question} ${data.id}';
   }
+}
+
+class Datafaq {
+  String id;
+  String question;
+  String answer;
+  Null createdAt;
+  Null updatedAt;
+
+  Datafaq(
+      {required this.id,
+      required this.question,
+      required this.answer,
+      this.createdAt,
+      this.updatedAt});
 }

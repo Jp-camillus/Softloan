@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_screenutil: ^5.9.0
   get: ^4.6.6
+  flutter_native_splash: ^2.4.0
   gap: ^3.0.1
   eva_icons_flutter: ^3.1.0
   google_fonts: ^6.1.0
@@ -55,7 +56,10 @@ dependencies:
   flutter_inappwebview: ^5.3.2
   webview_flutter: ^2.0.13 
 
-
+flutter_native_splash:
+  android: true
+  ios: true
+  color: "0xFF008080"
 
 dev_dependencies:
   flutter_test:

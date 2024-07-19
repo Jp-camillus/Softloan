@@ -5,6 +5,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:softloanapp/Constant/colors.dart';
 import 'package:softloanapp/Constant/images.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Assistantscreen extends StatefulWidget {
   const Assistantscreen({super.key});
@@ -14,6 +15,15 @@ class Assistantscreen extends StatefulWidget {
 }
 
 class _AssistantscreenState extends State<Assistantscreen> {
+  void _launchWhatsApp() async {
+    String url = "https://wa.me/+2349122328691";
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +71,9 @@ class _AssistantscreenState extends State<Assistantscreen> {
                       fontWeight: FontWeight.bold, fontSize: 0.025.sh),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _launchWhatsApp();
+                  },
                   icon: Icon(
                     Iconsax.message,
                     color: colors.Appcolors,

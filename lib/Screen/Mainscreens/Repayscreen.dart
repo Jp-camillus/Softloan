@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -16,6 +17,26 @@ class Repayloanscreen extends StatefulWidget {
 }
 
 class _RepayloanscreenState extends State<Repayloanscreen> {
+  String firstAccount = '9122329898';
+  String secondAccount = '3192156159';
+  void copyfirstToClipboard(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: firstAccount));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Copied $firstAccount to Clipboard')),
+    );
+  }
+
+  void copysecondToClipboard(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: secondAccount));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          backgroundColor: Colors.green,
+          content: Text('Copied $secondAccount to Clipboard')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,20 +101,26 @@ class _RepayloanscreenState extends State<Repayloanscreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              '3192156159',
+                              firstAccount,
                               style: TextStyle(
                                   fontSize: 0.02.sh, color: Colors.green),
                             ),
-                            Container(
-                              alignment: Alignment.center,
-                              height: 0.035.sh,
-                              width: 0.15.sw,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(0.02.sh),
-                                  border: Border.all(color: colors.Appcolors)),
-                              child: Text(
-                                'Copy',
-                                style: TextStyle(fontSize: 0.02.sh),
+                            GestureDetector(
+                              onTap: () {
+                                copyfirstToClipboard(context);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 0.035.sh,
+                                width: 0.15.sw,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(0.02.sh),
+                                    border:
+                                        Border.all(color: colors.Appcolors)),
+                                child: Text(
+                                  'Copy',
+                                ),
                               ),
                             ),
                           ],
@@ -148,20 +175,26 @@ class _RepayloanscreenState extends State<Repayloanscreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              '3192156159',
+                              secondAccount,
                               style: TextStyle(
                                   fontSize: 0.02.sh, color: Colors.green),
                             ),
-                            Container(
-                              alignment: Alignment.center,
-                              height: 0.035.sh,
-                              width: 0.15.sw,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(0.02.sh),
-                                  border: Border.all(color: colors.Appcolors)),
-                              child: Text(
-                                'Copy',
-                                style: TextStyle(fontSize: 0.02.sh),
+                            GestureDetector(
+                              onTap: () {
+                                copysecondToClipboard(context);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 0.035.sh,
+                                width: 0.15.sw,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(0.02.sh),
+                                    border:
+                                        Border.all(color: colors.Appcolors)),
+                                child: Text(
+                                  'Copy',
+                                ),
                               ),
                             ),
                           ],

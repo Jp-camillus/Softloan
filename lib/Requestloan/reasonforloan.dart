@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:softloanapp/Constant/colors.dart';
+import 'package:softloanapp/Providers/Authproviders/Authprovider.dart';
 import 'package:softloanapp/Succes&faliurescreen/loanapplysuccess.dart';
 import 'package:softloanapp/Widget/custombutton.dart';
 import 'package:softloanapp/Widget/textfield.dart';
@@ -16,7 +17,7 @@ class Reasonforlaon extends StatefulWidget {
 
 class _ReasonforlaonState extends State<Reasonforlaon> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController phonenumbercontroller = TextEditingController();
+  final TextEditingController loanamountcontroller = TextEditingController();
 
   bool _isButtonEnabled = false;
   Color bordercolors = Colors.black;
@@ -31,6 +32,7 @@ class _ReasonforlaonState extends State<Reasonforlaon> {
 
   String? selectedValue;
   final TextEditingController textEditingController = TextEditingController();
+  Softloanauth auth = Get.put(Softloanauth());
 
   @override
   void dispose() {
@@ -69,7 +71,7 @@ class _ReasonforlaonState extends State<Reasonforlaon> {
                     return null;
                   }
                 },
-                textEditingController: phonenumbercontroller,
+                textEditingController: loanamountcontroller,
                 Tittle: 'amount needed',
               ),
               SizedBox(
@@ -200,5 +202,9 @@ class _ReasonforlaonState extends State<Reasonforlaon> {
     });
   }
 
-  void _next() {}
+  void _next() {
+    auth.Loanapply(
+        amount: loanamountcontroller.text.trim(),
+        reasonforloan: selectedValue as String);
+  }
 }

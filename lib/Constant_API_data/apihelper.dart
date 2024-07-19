@@ -77,6 +77,25 @@ class SoftloanHelperAPIMethods {
     }
   }
 
+  static Future<Response> GetDataWithOutAuthorization({
+    required String uri,
+  }) async {
+    final sharedPref = await SharedPreferences.getInstance();
+    String? token = await sharedPref.getString(SoftlaonDataKeys.TOKEN);
+    debugPrint("SOFTLOANTOKEN :::$token");
+    final url = Uri.parse(uri);
+    try {
+      Response response = await http.get(
+        url,
+        headers: SoftloanHeaders(),
+      );
+      return response;
+    } catch (e) {
+      debugPrint("ERROR AT MAKING GET REQUEST: $e");
+      return Response({"GET REQUEST FAILED"}.toString(), 1);
+    }
+  }
+
   static Future<Response> postData({
     required String uri,
     required dynamic body,
@@ -98,16 +117,35 @@ class SoftloanHelperAPIMethods {
     }
   }
 
-  static Future<Response> patchData({
+  static Future<Response> putdata({
     required String uri,
     required dynamic body,
   }) async {
-    // url
+    final sharedPref = await SharedPreferences.getInstance();
+    String? token = await sharedPref.getString(SoftlaonDataKeys.TOKEN);
     final url = Uri.parse(uri);
 
     try {
-      Response response =
-          await http.patch(url, body: body, headers: SoftloanHeaders());
+      Response response = await http.put(url,
+          body: body, headers: SoftloanheaderwithAuthorization(token!));
+      return response;
+    } catch (e) {
+      debugPrint("ERROR AT MAKING PATCH REQUEST: $e");
+      return Response({"PATCH REQUEST FAILED"}.toString(), 1);
+    }
+  }
+
+  static Future<Response> putformdata({
+    required String uri,
+    required dynamic body,
+  }) async {
+    final sharedPref = await SharedPreferences.getInstance();
+    String? token = await sharedPref.getString(SoftlaonDataKeys.TOKEN);
+    final url = Uri.parse(uri);
+
+    try {
+      Response response = await http.put(url,
+          body: body, headers: SoftloanheaderwithAuthorization(token!));
       return response;
     } catch (e) {
       debugPrint("ERROR AT MAKING PATCH REQUEST: $e");

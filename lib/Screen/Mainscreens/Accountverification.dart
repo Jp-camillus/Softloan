@@ -3,12 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:softloanapp/Constant/colors.dart';
+import 'package:softloanapp/Providers/Authproviders/registerclass.dart';
 import 'package:softloanapp/Screen/Mainscreens/Accountverification3.dart';
 import 'package:softloanapp/Screen/Mainscreens/successcreen.dart';
 
 import 'package:softloanapp/Screen/Resetpassword/resetpasswordscreen.dart';
 import 'package:softloanapp/Widget/custombutton.dart';
 import 'package:softloanapp/Widget/textfield.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Accountverificationscreen extends StatefulWidget {
   const Accountverificationscreen({super.key});
@@ -20,14 +22,20 @@ class Accountverificationscreen extends StatefulWidget {
 
 class _AccountverificationscreenState extends State<Accountverificationscreen> {
   final _formKey = GlobalKey<FormState>();
+
+  String? selectedValue;
+  Color bordercolors = Colors.black;
+
+  final List<String> items = [
+    'male',
+    'female',
+  ];
   final TextEditingController _surnamecontroller = TextEditingController();
   final TextEditingController _lastnamecontroller = TextEditingController();
   final TextEditingController _workrolecontroller = TextEditingController();
-  final TextEditingController _gendercontroller = TextEditingController();
+  final TextEditingController _worktypecontroller = TextEditingController();
   final TextEditingController _salary = TextEditingController();
-
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController phonenumbercontroller = TextEditingController();
+  final TextEditingController _email = TextEditingController();
 
   final TextEditingController _Beneficiary = TextEditingController();
   bool _isButtonEnabled = false;
@@ -105,6 +113,21 @@ class _AccountverificationscreenState extends State<Accountverificationscreen> {
                 SizedBox(
                   height: 0.03.sh,
                 ),
+                Text('Email'),
+                TextFeildWithNoIcon(
+                  textvalidator: (value) {
+                    if (value!.isEmpty) {
+                      return 'field is required';
+                    } else {
+                      return null;
+                    }
+                  },
+                  textEditingController: _email,
+                  Tittle: 'Email',
+                ),
+                SizedBox(
+                  height: 0.03.sh,
+                ),
                 Text('Work role'),
                 TextFeildWithNoIcon(
                   textvalidator: (value) {
@@ -120,21 +143,82 @@ class _AccountverificationscreenState extends State<Accountverificationscreen> {
                 SizedBox(
                   height: 0.03.sh,
                 ),
-                Text('Gender'),
+                Text('Work type'),
                 TextFeildWithNoIcon(
                   textvalidator: (value) {
-                    if (!_gendercontroller.text.contains('male') &&
-                        !_gendercontroller.text.contains('female')) {
-                      return 'You must be a male or a female';
-                    } else if (value!.isEmpty) {
-                      return 'this field is required';
+                    if (value!.isEmpty) {
+                      return 'field is required';
                     } else {
                       return null;
                     }
                   },
-                  textEditingController: _gendercontroller,
-                  Tittle: 'Gender',
+                  textEditingController: _worktypecontroller,
+                  Tittle: 'Work type',
                 ),
+                SizedBox(
+                  height: 0.03.sh,
+                ),
+                Text('Gender'),
+                FormField<String>(validator: (value) {
+                  if (value == null || selectedValue == null) {
+                    return 'Please choose your gender';
+                  }
+                  return null;
+                }, builder: (FormFieldState<String> state) {
+                  return Container(
+                    height: 0.063.sh,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: bordercolors),
+                      borderRadius: BorderRadius.circular(0.01.sh),
+                      color: Colors.white,
+                    ),
+                    alignment: Alignment.center,
+                    width: 1.sw,
+                    child: DropdownButton2<String>(
+                      underline: Container(),
+                      hint: Text(
+                        'gender',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).hintColor,
+                        ),
+                      ),
+                      items: items
+                          .map((item) => DropdownMenuItem(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      value: selectedValue,
+                      onChanged: (value) {
+                        setState(() {
+                          bordercolors = colors.Appcolors;
+                          selectedValue = value;
+                          state.didChange(value);
+                        });
+                      },
+                      buttonStyleData: const ButtonStyleData(
+                        decoration: BoxDecoration(),
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        height: 60,
+                        width: 350,
+                      ),
+                      dropdownStyleData: const DropdownStyleData(
+                        maxHeight: 200,
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        height: 40,
+                      ),
+
+                      //This to clear the search value when you close the menu
+                    ),
+                  );
+                }),
                 SizedBox(
                   height: 0.03.sh,
                 ),
@@ -176,7 +260,16 @@ class _AccountverificationscreenState extends State<Accountverificationscreen> {
     });
   }
 
+  Registeruserdata? registeruserdata;
   void _login() {
-    Get.to(Accountverificationimagepicker());
+    Get.to(Accountverificationimagepicker(
+      email: _email.text,
+      gender: selectedValue.toString(),
+      worktype: _worktypecontroller.text.trim(),
+      lastnamecontroller: _lastnamecontroller.text.trim(),
+      salary: _salary.text.trim(),
+      surnamecontroller: _surnamecontroller.text.trim(),
+      workrolecontroller: _workrolecontroller.text.trim(),
+    ));
   }
 }

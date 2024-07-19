@@ -32,7 +32,6 @@ class Awaitingapprovalscreen extends StatelessWidget {
                 SizedBox(
                   height: 0.03.sh,
                 ),
-               
               ],
             ),
           ),

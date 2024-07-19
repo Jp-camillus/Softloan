@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -250,22 +251,22 @@ class Softloanauth extends GetxController {
     }
   }
 
-  Future<void> verifyuser(
-      {required String email,
-      required String surname,
-      required String lastname,
-      required String worktype,
-      required String workrole,
-      required String gender,
-      required String salary,
-      required String bank,
-      required String accountnumber,
-      required String accountname,
-      required String image}) async {
+  Future<void> verifyuser({
+    required String email,
+    required String surname,
+    required String lastname,
+    required String worktype,
+    required String workrole,
+    required String gender,
+    required String salary,
+    required String bank,
+    required String accountnumber,
+    required String accountname,
+  }) async {
     isLoadingToggler(true);
 
     try {
-      final myresponse = await SoftloanHelperAPIMethods.postData(
+      final myresponse = await SoftloanHelperAPIMethods.putformdata(
         uri: SoftloanendPoints.VERIFICAITON,
         body: jsonEncode(
           {
@@ -274,23 +275,29 @@ class Softloanauth extends GetxController {
             'last_name': lastname,
             'work_type': worktype,
             'work_role': workrole,
-            'gendergender': gender,
+            'gender': gender,
             'salary': salary,
             'bank': bank,
             'account_number': accountnumber,
             'account_name': accountname,
-            'image': image
           },
         ),
       );
+
       var body = myresponse.body;
       print('THIS IS THE DETAIL OF THE REGISTERED BODY: $body');
+      print(myresponse.statusCode);
       var decodebody = jsonDecode(body);
       print('DECODED BODY=> $decodebody');
-      if (myresponse.statusCode == 201) {
+      if (myresponse.statusCode == 200) {
         print('VERIFICATION SUCCESSFULL');
         _userfeedBack.showfeedback(Colors.green, 'VERIFICATION SUCCESSFUL');
-        goToverificationsuccess();
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          getSoftloanData.getUserData();
+        });
+        Future.delayed(Duration(seconds: 2), () {
+          goToverificationsuccess();
+        });
       } else {
         _userfeedBack.showfeedback(Colors.red, 'VERIFICATION Failed');
       }
@@ -305,7 +312,8 @@ class Softloanauth extends GetxController {
       {required String amount, required String reasonforloan}) async {
     isLoadingToggler(true);
     try {
-      final myresponse = await SoftloanHelperAPIMethods.postData(
+      final myresponse =
+          await SoftloanHelperAPIMethods.PostDataWithAuthorization(
         uri: SoftloanendPoints.LOANS,
         body: jsonEncode({'amount': amount, 'reason': reasonforloan}),
       );
